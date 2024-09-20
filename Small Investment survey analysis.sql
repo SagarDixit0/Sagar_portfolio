@@ -1,3 +1,30 @@
+-- Selecting the database
+USE project;
+
+-- Searching for duplicates
+-- Start
+	WITH duplicate_cte AS
+    (
+    SELECT *,
+    ROW_NUMBER() OVER(
+    PARTITION BY 
+			gender, age, Investment_Avenues, 
+            Mutual_Funds, Equity_Market, 
+            Debentures, Government_Bonds, 
+            Fixed_Deposits,PPF,Gold,
+            Stock_Marktet, Factor,
+            Objective, Purpose,
+            Duration, Invest_Monitor,
+            Expect, Avenue,
+            `What are your savings objectives?`, Reason_Equity,
+            Reason_Mutual, Reason_Bonds,
+            Reason_FD, Source) AS row_num
+FROM staging_finance_data)
+SELECT * 
+FROM duplicate_cte
+WHERE row_num > 1;
+
+-- END
 
 -- Total number of investors by Gender
 -- START
