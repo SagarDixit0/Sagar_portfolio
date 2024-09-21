@@ -30,7 +30,6 @@ FROM duplicate_cte
 WHERE row_num > 1;
 
 -- END
-
 -- Total number of investors by Gender
 -- START
 
@@ -109,7 +108,7 @@ SELECT
     Sum(Debentures) AS 'Total Debentures ratings', 
     Sum(Government_Bonds) AS 'Total Government Bonds ratings',
     Sum(Fixed_Deposits) AS 'Total Fixed Deposits ratings',
-    Sum(PPF) AS 'Total PPF ratings',
+	Sum(PPF) AS 'Total PPF ratings',
     Sum(Gold) AS 'Total Gold ratings'
 FROM staging_finance_data
 Where Source Like 'Financial Consultants';
@@ -142,6 +141,15 @@ Group by Avenue
 Order by 'Number of investors' Desc;
 
 -- END --
+
+-- Why do investors invest their money ?
+-- Start
+
+ SELECT `What are your savings objectives?` AS 'Saving goals', count(*) AS 'Number of investors' FROM staging_finance_data
+Group by `What are your savings objectives?`
+Order by count(*) Desc;
+
+-- End
 
 -- Reasons for equity investment
 -- START --
