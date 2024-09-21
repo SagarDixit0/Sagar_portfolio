@@ -1,6 +1,11 @@
 -- Selecting the database
 USE project;
 
+-- Creating a staging table
+
+	Create table staging_finance_data AS
+    Select * from finance_data;
+
 -- Searching for duplicates
 -- Start
 	WITH duplicate_cte AS
@@ -37,11 +42,29 @@ GROUP BY gender
 ORDER BY Count(*) desc;
 -- END --
 
+-- Total number of investors be age
+
+SELECT 
+	age, 
+    Count(*) As 'Number of investors'
+From staging_finance_data
+GROUP BY age
+ORDER BY Count(*) desc;
+
 -- The average ratings given to different Investment Routes by age 
 -- START --
+Alter table staging_finance_data
+ADD Age_bracket TEXT;
 
-Select 
-	age AS Age,
+UPDATE staging_finance_data
+SET Age_bracket = CASE 
+    WHEN age BETWEEN 21 AND 25 THEN '21-25'
+    WHEN age BETWEEN 26 AND 30 THEN '26-30'
+    WHEN age BETWEEN 30 AND 35 THEN '30-35'
+END;
+
+Select
+	Age_bracket ,
 	CAST(Avg(Mutual_funds) As DECIMAL(10,2)) As 'Avg Mutual funds rating',
     CAST(Avg(Equity_Market) As DECIMAL(10,2)) As 'Avg Equity Market',
     CAST(Avg(Debentures) AS DECIMAL(10,2)) AS 'Avg Debentures rating',
@@ -50,10 +73,8 @@ Select
     CAST(Avg(PPF) AS DECIMAL(10,2)) AS 'Avg PPF rating',
     CAST(Avg(Gold) AS DECIMAL(10,2)) AS 'Avg Gold rating'
 From staging_finance_data
-Group by age
-Order by age;
-
--- END --
+Group by Age_bracket
+Order by Age_bracket;
 
 -- What is average rating given to different Investment Routes by gender?
 -- START --
